@@ -1,0 +1,15 @@
+[submodule "thirdparty/stuff"]
+	path = thirdparty/stuff
+	url = https://github.com/xor-shift/stuff
+[submodule "thirdparty/imgui"]
+	path = thirdparty/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "thirdparty/fmt"]
+	path = thirdparty/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "thirdparty/glfw"]
+	path = thirdparty/glfw
+	url = https://github.com/glfw/glfw
+[submodule "thirdparty/bgfx.cmake"]
+	path = thirdparty/bgfx.cmake
+	url = https://github.com/bkaradzic/bgfx.cmake
