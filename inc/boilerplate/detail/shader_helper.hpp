@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include <span>
 #include <vector>
 
 namespace bpt {
@@ -63,6 +64,48 @@ auto load_shader(std::filesystem::path const& path, std::string_view name, shade
     auto file_contents = std::vector<u8>{};
     std::copy(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>(), std::back_inserter(file_contents));
     return bgfx::createShader(bgfx::copy(file_contents.data(), file_contents.size()));
+}
+
+struct embedded_shader_pack {
+    std::span<u8> essl {};
+    std::span<u8> glsl {};
+    std::span<u8> metal {};
+    std::span<u8> vulkan {};
+    std::span<u8> dx9 {};
+    std::span<u8> dx10 {};
+    std::span<u8> dx11 {};
+};
+
+template<typename Fn>
+auto load_embedded_shader(Fn&& data_getter) -> stf::expected<bgfx::ShaderHandle, std::string_view> {
+    const embedded_shader_pack pack = std::invoke(data_getter);
+
+    auto shader_data = std::span<u8>{};
+
+    const auto* const caps = bgfx::getCaps();
+    const auto renderer_type = caps->rendererType;
+
+    switch (renderer_type) {
+        case bgfx::RendererType::Noop: shader_data = {}; break;
+        case bgfx::RendererType::Agc: shader_data = {}; break;
+        case bgfx::RendererType::Direct3D9: shader_data = pack.dx9; break;
+        case bgfx::RendererType::Direct3D11: shader_data = pack.dx10; break;
+        case bgfx::RendererType::Direct3D12: shader_data = pack.dx11; break;
+        case bgfx::RendererType::Gnm: shader_data = {}; break;
+        case bgfx::RendererType::Metal: shader_data = pack.metal; break;
+        case bgfx::RendererType::Nvn: shader_data = {}; break;
+        case bgfx::RendererType::OpenGLES: shader_data = pack.essl; break;
+        case bgfx::RendererType::OpenGL: shader_data = pack.glsl; break;
+        case bgfx::RendererType::Vulkan: shader_data = pack.vulkan; break;
+        case bgfx::RendererType::WebGPU: shader_data = {}; break;
+        default: std::unreachable();
+    }
+
+    if (shader_data.empty()) {
+        return stf::unexpected { "unsupported renderer type" };
+    }
+
+    return bgfx::createShader(bgfx::copy(shader_data.data(), shader_data.size()));
 }
 
 }  // namespace bpt
