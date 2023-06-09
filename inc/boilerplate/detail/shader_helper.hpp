@@ -54,7 +54,7 @@ auto load_shader(std::filesystem::path const& path, std::string_view name, shade
 
     const auto extension = renderer_extension(renderer_type);
 
-    const auto cur_path = path / fmt::format("{}.{}.{}.bin", name, extension, shader_extension(type));
+    const auto cur_path = path / fmt::format("{}.{}.{}.bin", name, shader_extension(type), extension);
     auto ifs = std::ifstream(cur_path);
 
     if (!ifs) {

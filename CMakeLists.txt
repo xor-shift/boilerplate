@@ -3,6 +3,16 @@ project(boilerplate)
 
 set(CMAKE_CXX_STANDARD 23)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    #target_compile_options(${PROJECT_NAME} PUBLIC -fsanitize=address -fsanitize=undefined)
+    #target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address -fsanitize=undefined)
+    add_compile_options(-fsanitize=address -fsanitize=undefined)
+    add_link_options(-fsanitize=address -fsanitize=undefined)
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    add_compile_options(-ffast-math -march=native -mtune=native -fopenmp -flto)
+    add_link_options(-fopenmp -flto)
+endif ()
+
 if (EMSCRIPTEN)
     message("emscripten path: ${EMSCRIPTEN}")
     set(GLFW_BUILD_X11 OFF)
@@ -18,7 +28,6 @@ if (EMSCRIPTEN)
 
     add_compile_options(-Wno-unused-command-line-argument -pthread)
     add_link_options(-Wno-unused-command-line-argument -pthread)
-    #set(CMAKE_EXECUTABLE_SUFFIX .html)
 else ()
     message("not an emscripten build")
     add_subdirectory(thirdparty/glfw)
@@ -81,16 +90,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_BINARY_DIR}/inc/
         inc)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-    #target_compile_options(${PROJECT_NAME} PUBLIC -fsanitize=address -fsanitize=undefined)
-    #target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address -fsanitize=undefined)
-    add_compile_options(-fsanitize=address -fsanitize=undefined)
-    add_link_options(-fsanitize=address -fsanitize=undefined)
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-    add_compile_options(-ffast-math -march=native -mtune=native -fopenmp -flto)
-    add_link_options(-fopenmp -flto)
-endif ()
-
 ### DEMO
 
 add_subdirectory(thirdparty/stuff/libs/qoi)
@@ -99,9 +98,10 @@ add_executable(${PROJECT_NAME}_demo
         examples/demo/main.cpp)
 
 if (EMSCRIPTEN)
-    set_target_properties(${PROJECT_NAME}_demo PROPERTIES EXECUTABLE_SUFFIX .html)
+    #set_target_properties(${PROJECT_NAME}_demo PROPERTIES EXECUTABLE_SUFFIX .html)
+    set(CMAKE_EXECUTABLE_SUFFIX .html)
     target_link_options(${PROJECT_NAME}_demo PRIVATE --preload-file ${CMAKE_SOURCE_DIR}/run@/)
-    target_link_options(shaderc PRIVATE --embed-file ${CMAKE_SOURCE_DIR}/src/boilerplate/shaders/)
+    #target_link_options(shaderc PRIVATE --embed-file ${CMAKE_SOURCE_DIR}/src/boilerplate/shaders/)
 endif ()
 
 target_link_libraries(${PROJECT_NAME}_demo ${PROJECT_NAME} stuff_qoi)

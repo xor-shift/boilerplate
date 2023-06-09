@@ -194,11 +194,17 @@ private:
           .end();
 
         const auto imgui_shader_vs = load_embedded_shader([] {
+            static  // lmao
 #include <boilerplate/detail/generated_shaders/imgui.vs.essl.h>
+              static
 #include <boilerplate/detail/generated_shaders/imgui.vs.glsl.h>
+              static
 #include <boilerplate/detail/generated_shaders/imgui.vs.metal.h>
+              static
 #include <boilerplate/detail/generated_shaders/imgui.vs.vulkan.h>
-            return embedded_shader_pack {
+              ;  // for clang-format
+
+            return embedded_shader_pack{
               .essl = imgui_vs_essl,
               .glsl = imgui_vs_glsl,
               .metal = imgui_vs_metal,
@@ -207,17 +213,26 @@ private:
         });
 
         const auto imgui_shader_fs = load_embedded_shader([] {
+            static
 #include <boilerplate/detail/generated_shaders/imgui.fs.essl.h>
+              static
 #include <boilerplate/detail/generated_shaders/imgui.fs.glsl.h>
+              static
 #include <boilerplate/detail/generated_shaders/imgui.fs.metal.h>
+              static
 #include <boilerplate/detail/generated_shaders/imgui.fs.vulkan.h>
-            return embedded_shader_pack {
+              ;
+
+            return embedded_shader_pack{
               .essl = imgui_fs_essl,
               .glsl = imgui_fs_glsl,
               .metal = imgui_fs_metal,
               .vulkan = imgui_fs_vulkan,
             };
         });
+
+        // const auto imgui_shader_vs = load_shader("shaders", "imgui", bpt::shader_type::vertex);
+        // const auto imgui_shader_fs = load_shader("shaders", "imgui", bpt::shader_type::fragment);
 
         m_program_imgui = bgfx::createProgram(UNWRAP(imgui_shader_vs), UNWRAP(imgui_shader_fs), true);
         m_tex = bgfx::createUniform("m_tex", bgfx::UniformType::Sampler);
