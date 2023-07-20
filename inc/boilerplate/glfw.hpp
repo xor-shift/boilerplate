@@ -135,7 +135,7 @@ struct window {
     explicit window(stf::blas::vector<int, 2> width, const char* title);
 
     void create(stf::blas::vector<int, 2> width, const char* title);
-    void destroy();
+    void close();
 
     constexpr auto get_handle() const -> GLFWwindow* { return m_handle; }
 

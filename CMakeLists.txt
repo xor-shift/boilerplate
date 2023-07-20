@@ -3,15 +3,11 @@ project(boilerplate)
 
 set(CMAKE_CXX_STANDARD 23)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-    #target_compile_options(${PROJECT_NAME} PUBLIC -fsanitize=address -fsanitize=undefined)
-    #target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address -fsanitize=undefined)
-    add_compile_options(-fsanitize=address -fsanitize=undefined)
-    add_link_options(-fsanitize=address -fsanitize=undefined)
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-    add_compile_options(-ffast-math -march=native -mtune=native -fopenmp -flto)
-    add_link_options(-fopenmp -flto)
-endif ()
+# temporary
+#if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+#    add_compile_options(-stdlib=libc++)
+#    add_link_options(-stdlib=libc++)
+#endif ()
 
 if (EMSCRIPTEN)
     message("emscripten path: ${EMSCRIPTEN}")
@@ -33,14 +29,9 @@ else ()
     add_subdirectory(thirdparty/glfw)
 endif ()
 
-add_compile_options(-stdlib=libc++)
-add_link_options(-stdlib=libc++)
-
 add_subdirectory(thirdparty/bgfx.cmake)
 add_subdirectory(thirdparty/fmt)
-add_subdirectory(thirdparty/stuff/libs/blas)
-add_subdirectory(thirdparty/stuff/libs/expected)
-add_subdirectory(thirdparty/stuff/libs/thread)
+add_subdirectory(thirdparty/stuff)
 
 ### SHADERS
 
@@ -83,16 +74,16 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
         fmt::fmt
         glfw bx bimg bgfx
-        stuff_blas stuff_expected stuff_thread
+        stf::blas stf::expected stf::thread
         )
 target_include_directories(${PROJECT_NAME} PUBLIC
         thirdparty/imgui
         ${CMAKE_BINARY_DIR}/inc/
         inc)
 
-### DEMO
+optimize_or_sanitize(${PROJECT_NAME})
 
-add_subdirectory(thirdparty/stuff/libs/qoi)
+### DEMO
 
 add_executable(${PROJECT_NAME}_demo
         examples/demo/main.cpp)
@@ -104,4 +95,6 @@ if (EMSCRIPTEN)
     #target_link_options(shaderc PRIVATE --embed-file ${CMAKE_SOURCE_DIR}/src/boilerplate/shaders/)
 endif ()
 
-target_link_libraries(${PROJECT_NAME}_demo ${PROJECT_NAME} stuff_qoi)
+target_link_libraries(${PROJECT_NAME}_demo ${PROJECT_NAME} stf::qoi)
+
+optimize_or_sanitize(${PROJECT_NAME}_demo)

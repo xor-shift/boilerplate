@@ -119,7 +119,7 @@ window::window(stf::blas::vector<int, 2> width, const char* title) { create(widt
 
 void window::create(stf::blas::vector<int, 2> width, const char* title) {
     if (m_handle != nullptr) {
-        destroy();
+        close();
     }
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -131,7 +131,7 @@ void window::create(stf::blas::vector<int, 2> width, const char* title) {
     register_glfw_callbacks(m_handle);
 }
 
-void window::destroy() {
+void window::close() {
     if (m_handle == nullptr) {
         return;
     }

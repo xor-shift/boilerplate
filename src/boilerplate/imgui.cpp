@@ -16,125 +16,115 @@
 namespace bpt::imgui::detail {
 
 constexpr auto glfw_to_imgui_key(int glfw_key) -> std::optional<ImGuiKey> {
-    constexpr ImGuiKey lookup[] = {
-      [GLFW_KEY_SPACE] = ImGuiKey_Space,                 //
-      [GLFW_KEY_APOSTROPHE] = ImGuiKey_Apostrophe,       //
-      [GLFW_KEY_COMMA] = ImGuiKey_Comma,                 //
-      [GLFW_KEY_MINUS] = ImGuiKey_Minus,                 //
-      [GLFW_KEY_PERIOD] = ImGuiKey_Period,               //
-      [GLFW_KEY_SLASH] = ImGuiKey_Slash,                 //
-      [GLFW_KEY_0] = ImGuiKey_0,                         //
-      [GLFW_KEY_1] = ImGuiKey_1,                         //
-      [GLFW_KEY_2] = ImGuiKey_2,                         //
-      [GLFW_KEY_3] = ImGuiKey_3,                         //
-      [GLFW_KEY_4] = ImGuiKey_4,                         //
-      [GLFW_KEY_5] = ImGuiKey_5,                         //
-      [GLFW_KEY_6] = ImGuiKey_6,                         //
-      [GLFW_KEY_7] = ImGuiKey_7,                         //
-      [GLFW_KEY_8] = ImGuiKey_8,                         //
-      [GLFW_KEY_9] = ImGuiKey_9,                         //
-      [GLFW_KEY_SEMICOLON] = ImGuiKey_Semicolon,         //
-      [GLFW_KEY_EQUAL] = ImGuiKey_Equal,                 //
-      [GLFW_KEY_A] = ImGuiKey_A,                         //
-      [GLFW_KEY_B] = ImGuiKey_B,                         //
-      [GLFW_KEY_C] = ImGuiKey_C,                         //
-      [GLFW_KEY_D] = ImGuiKey_D,                         //
-      [GLFW_KEY_E] = ImGuiKey_E,                         //
-      [GLFW_KEY_F] = ImGuiKey_F,                         //
-      [GLFW_KEY_G] = ImGuiKey_G,                         //
-      [GLFW_KEY_H] = ImGuiKey_H,                         //
-      [GLFW_KEY_I] = ImGuiKey_I,                         //
-      [GLFW_KEY_J] = ImGuiKey_J,                         //
-      [GLFW_KEY_K] = ImGuiKey_K,                         //
-      [GLFW_KEY_L] = ImGuiKey_L,                         //
-      [GLFW_KEY_M] = ImGuiKey_M,                         //
-      [GLFW_KEY_N] = ImGuiKey_N,                         //
-      [GLFW_KEY_O] = ImGuiKey_O,                         //
-      [GLFW_KEY_P] = ImGuiKey_P,                         //
-      [GLFW_KEY_Q] = ImGuiKey_Q,                         //
-      [GLFW_KEY_R] = ImGuiKey_R,                         //
-      [GLFW_KEY_S] = ImGuiKey_S,                         //
-      [GLFW_KEY_T] = ImGuiKey_T,                         //
-      [GLFW_KEY_U] = ImGuiKey_U,                         //
-      [GLFW_KEY_V] = ImGuiKey_V,                         //
-      [GLFW_KEY_W] = ImGuiKey_W,                         //
-      [GLFW_KEY_X] = ImGuiKey_X,                         //
-      [GLFW_KEY_Y] = ImGuiKey_Y,                         //
-      [GLFW_KEY_Z] = ImGuiKey_Z,                         //
-      [GLFW_KEY_LEFT_BRACKET] = ImGuiKey_LeftBracket,    //
-      [GLFW_KEY_BACKSLASH] = ImGuiKey_Backslash,         //
-      [GLFW_KEY_RIGHT_BRACKET] = ImGuiKey_RightBracket,  //
-      [GLFW_KEY_GRAVE_ACCENT] = ImGuiKey_GraveAccent,    //
-      [GLFW_KEY_ESCAPE] = ImGuiKey_Escape,               //
-      [GLFW_KEY_ENTER] = ImGuiKey_Enter,                 //
-      [GLFW_KEY_TAB] = ImGuiKey_Tab,                     //
-      [GLFW_KEY_BACKSPACE] = ImGuiKey_Backspace,         //
-      [GLFW_KEY_INSERT] = ImGuiKey_Insert,               //
-      [GLFW_KEY_DELETE] = ImGuiKey_Delete,               //
-      [GLFW_KEY_RIGHT] = ImGuiKey_RightArrow,            //
-      [GLFW_KEY_LEFT] = ImGuiKey_LeftArrow,              //
-      [GLFW_KEY_DOWN] = ImGuiKey_DownArrow,              //
-      [GLFW_KEY_UP] = ImGuiKey_UpArrow,                  //
-      [GLFW_KEY_PAGE_UP] = ImGuiKey_PageUp,              //
-      [GLFW_KEY_PAGE_DOWN] = ImGuiKey_PageDown,          //
-      [GLFW_KEY_HOME] = ImGuiKey_Home,                   //
-      [GLFW_KEY_END] = ImGuiKey_End,                     //
-      [GLFW_KEY_CAPS_LOCK] = ImGuiKey_CapsLock,          //
-      [GLFW_KEY_SCROLL_LOCK] = ImGuiKey_ScrollLock,      //
-      [GLFW_KEY_NUM_LOCK] = ImGuiKey_NumLock,            //
-      [GLFW_KEY_PRINT_SCREEN] = ImGuiKey_PrintScreen,    //
-      [GLFW_KEY_PAUSE] = ImGuiKey_Pause,                 //
-      [GLFW_KEY_F1] = ImGuiKey_F1,                       //
-      [GLFW_KEY_F2] = ImGuiKey_F2,                       //
-      [GLFW_KEY_F3] = ImGuiKey_F3,                       //
-      [GLFW_KEY_F4] = ImGuiKey_F4,                       //
-      [GLFW_KEY_F5] = ImGuiKey_F5,                       //
-      [GLFW_KEY_F6] = ImGuiKey_F6,                       //
-      [GLFW_KEY_F7] = ImGuiKey_F7,                       //
-      [GLFW_KEY_F8] = ImGuiKey_F8,                       //
-      [GLFW_KEY_F9] = ImGuiKey_F9,                       //
-      [GLFW_KEY_F10] = ImGuiKey_F10,                     //
-      [GLFW_KEY_F11] = ImGuiKey_F11,                     //
-      [GLFW_KEY_F12] = ImGuiKey_F12,                     //
-      [GLFW_KEY_KP_0] = ImGuiKey_Keypad0,                //
-      [GLFW_KEY_KP_1] = ImGuiKey_Keypad1,                //
-      [GLFW_KEY_KP_2] = ImGuiKey_Keypad2,                //
-      [GLFW_KEY_KP_3] = ImGuiKey_Keypad3,                //
-      [GLFW_KEY_KP_4] = ImGuiKey_Keypad4,                //
-      [GLFW_KEY_KP_5] = ImGuiKey_Keypad5,                //
-      [GLFW_KEY_KP_6] = ImGuiKey_Keypad6,                //
-      [GLFW_KEY_KP_7] = ImGuiKey_Keypad7,                //
-      [GLFW_KEY_KP_8] = ImGuiKey_Keypad8,                //
-      [GLFW_KEY_KP_9] = ImGuiKey_Keypad9,                //
-      [GLFW_KEY_KP_DECIMAL] = ImGuiKey_KeypadDecimal,    //
-      [GLFW_KEY_KP_DIVIDE] = ImGuiKey_KeypadDivide,      //
-      [GLFW_KEY_KP_MULTIPLY] = ImGuiKey_KeypadMultiply,  //
-      [GLFW_KEY_KP_SUBTRACT] = ImGuiKey_KeypadSubtract,  //
-      [GLFW_KEY_KP_ADD] = ImGuiKey_KeypadAdd,            //
-      [GLFW_KEY_KP_ENTER] = ImGuiKey_KeypadEnter,        //
-      [GLFW_KEY_KP_EQUAL] = ImGuiKey_KeypadEqual,        //
-      [GLFW_KEY_LEFT_SHIFT] = ImGuiKey_LeftShift,        //
-      [GLFW_KEY_LEFT_CONTROL] = ImGuiKey_LeftCtrl,       //
-      [GLFW_KEY_LEFT_ALT] = ImGuiKey_LeftAlt,            //
-      [GLFW_KEY_LEFT_SUPER] = ImGuiKey_LeftSuper,        //
-      [GLFW_KEY_RIGHT_SHIFT] = ImGuiKey_LeftShift,       //
-      [GLFW_KEY_RIGHT_CONTROL] = ImGuiKey_RightCtrl,     //
-      [GLFW_KEY_RIGHT_ALT] = ImGuiKey_RightAlt,          //
-      [GLFW_KEY_RIGHT_SUPER] = ImGuiKey_RightSuper,      //
-      [GLFW_KEY_MENU] = ImGuiKey_Menu,                   //
-    };
-
-    if (glfw_key >= std::size(lookup)) {
-        return std::nullopt;
+    switch (glfw_key) {
+        case GLFW_KEY_SPACE: return ImGuiKey_Space;
+        case GLFW_KEY_APOSTROPHE: return ImGuiKey_Apostrophe;
+        case GLFW_KEY_COMMA: return ImGuiKey_Comma;
+        case GLFW_KEY_MINUS: return ImGuiKey_Minus;
+        case GLFW_KEY_PERIOD: return ImGuiKey_Period;
+        case GLFW_KEY_SLASH: return ImGuiKey_Slash;
+        case GLFW_KEY_0: return ImGuiKey_0;
+        case GLFW_KEY_1: return ImGuiKey_1;
+        case GLFW_KEY_2: return ImGuiKey_2;
+        case GLFW_KEY_3: return ImGuiKey_3;
+        case GLFW_KEY_4: return ImGuiKey_4;
+        case GLFW_KEY_5: return ImGuiKey_5;
+        case GLFW_KEY_6: return ImGuiKey_6;
+        case GLFW_KEY_7: return ImGuiKey_7;
+        case GLFW_KEY_8: return ImGuiKey_8;
+        case GLFW_KEY_9: return ImGuiKey_9;
+        case GLFW_KEY_SEMICOLON: return ImGuiKey_Semicolon;
+        case GLFW_KEY_EQUAL: return ImGuiKey_Equal;
+        case GLFW_KEY_A: return ImGuiKey_A;
+        case GLFW_KEY_B: return ImGuiKey_B;
+        case GLFW_KEY_C: return ImGuiKey_C;
+        case GLFW_KEY_D: return ImGuiKey_D;
+        case GLFW_KEY_E: return ImGuiKey_E;
+        case GLFW_KEY_F: return ImGuiKey_F;
+        case GLFW_KEY_G: return ImGuiKey_G;
+        case GLFW_KEY_H: return ImGuiKey_H;
+        case GLFW_KEY_I: return ImGuiKey_I;
+        case GLFW_KEY_J: return ImGuiKey_J;
+        case GLFW_KEY_K: return ImGuiKey_K;
+        case GLFW_KEY_L: return ImGuiKey_L;
+        case GLFW_KEY_M: return ImGuiKey_M;
+        case GLFW_KEY_N: return ImGuiKey_N;
+        case GLFW_KEY_O: return ImGuiKey_O;
+        case GLFW_KEY_P: return ImGuiKey_P;
+        case GLFW_KEY_Q: return ImGuiKey_Q;
+        case GLFW_KEY_R: return ImGuiKey_R;
+        case GLFW_KEY_S: return ImGuiKey_S;
+        case GLFW_KEY_T: return ImGuiKey_T;
+        case GLFW_KEY_U: return ImGuiKey_U;
+        case GLFW_KEY_V: return ImGuiKey_V;
+        case GLFW_KEY_W: return ImGuiKey_W;
+        case GLFW_KEY_X: return ImGuiKey_X;
+        case GLFW_KEY_Y: return ImGuiKey_Y;
+        case GLFW_KEY_Z: return ImGuiKey_Z;
+        case GLFW_KEY_LEFT_BRACKET: return ImGuiKey_LeftBracket;
+        case GLFW_KEY_BACKSLASH: return ImGuiKey_Backslash;
+        case GLFW_KEY_RIGHT_BRACKET: return ImGuiKey_RightBracket;
+        case GLFW_KEY_GRAVE_ACCENT: return ImGuiKey_GraveAccent;
+        case GLFW_KEY_ESCAPE: return ImGuiKey_Escape;
+        case GLFW_KEY_ENTER: return ImGuiKey_Enter;
+        case GLFW_KEY_TAB: return ImGuiKey_Tab;
+        case GLFW_KEY_BACKSPACE: return ImGuiKey_Backspace;
+        case GLFW_KEY_INSERT: return ImGuiKey_Insert;
+        case GLFW_KEY_DELETE: return ImGuiKey_Delete;
+        case GLFW_KEY_RIGHT: return ImGuiKey_RightArrow;
+        case GLFW_KEY_LEFT: return ImGuiKey_LeftArrow;
+        case GLFW_KEY_DOWN: return ImGuiKey_DownArrow;
+        case GLFW_KEY_UP: return ImGuiKey_UpArrow;
+        case GLFW_KEY_PAGE_UP: return ImGuiKey_PageUp;
+        case GLFW_KEY_PAGE_DOWN: return ImGuiKey_PageDown;
+        case GLFW_KEY_HOME: return ImGuiKey_Home;
+        case GLFW_KEY_END: return ImGuiKey_End;
+        case GLFW_KEY_CAPS_LOCK: return ImGuiKey_CapsLock;
+        case GLFW_KEY_SCROLL_LOCK: return ImGuiKey_ScrollLock;
+        case GLFW_KEY_NUM_LOCK: return ImGuiKey_NumLock;
+        case GLFW_KEY_PRINT_SCREEN: return ImGuiKey_PrintScreen;
+        case GLFW_KEY_PAUSE: return ImGuiKey_Pause;
+        case GLFW_KEY_F1: return ImGuiKey_F1;
+        case GLFW_KEY_F2: return ImGuiKey_F2;
+        case GLFW_KEY_F3: return ImGuiKey_F3;
+        case GLFW_KEY_F4: return ImGuiKey_F4;
+        case GLFW_KEY_F5: return ImGuiKey_F5;
+        case GLFW_KEY_F6: return ImGuiKey_F6;
+        case GLFW_KEY_F7: return ImGuiKey_F7;
+        case GLFW_KEY_F8: return ImGuiKey_F8;
+        case GLFW_KEY_F9: return ImGuiKey_F9;
+        case GLFW_KEY_F10: return ImGuiKey_F10;
+        case GLFW_KEY_F11: return ImGuiKey_F11;
+        case GLFW_KEY_F12: return ImGuiKey_F12;
+        case GLFW_KEY_KP_0: return ImGuiKey_Keypad0;
+        case GLFW_KEY_KP_1: return ImGuiKey_Keypad1;
+        case GLFW_KEY_KP_2: return ImGuiKey_Keypad2;
+        case GLFW_KEY_KP_3: return ImGuiKey_Keypad3;
+        case GLFW_KEY_KP_4: return ImGuiKey_Keypad4;
+        case GLFW_KEY_KP_5: return ImGuiKey_Keypad5;
+        case GLFW_KEY_KP_6: return ImGuiKey_Keypad6;
+        case GLFW_KEY_KP_7: return ImGuiKey_Keypad7;
+        case GLFW_KEY_KP_8: return ImGuiKey_Keypad8;
+        case GLFW_KEY_KP_9: return ImGuiKey_Keypad9;
+        case GLFW_KEY_KP_DECIMAL: return ImGuiKey_KeypadDecimal;
+        case GLFW_KEY_KP_DIVIDE: return ImGuiKey_KeypadDivide;
+        case GLFW_KEY_KP_MULTIPLY: return ImGuiKey_KeypadMultiply;
+        case GLFW_KEY_KP_SUBTRACT: return ImGuiKey_KeypadSubtract;
+        case GLFW_KEY_KP_ADD: return ImGuiKey_KeypadAdd;
+        case GLFW_KEY_KP_ENTER: return ImGuiKey_KeypadEnter;
+        case GLFW_KEY_KP_EQUAL: return ImGuiKey_KeypadEqual;
+        case GLFW_KEY_LEFT_SHIFT: return ImGuiKey_LeftShift;
+        case GLFW_KEY_LEFT_CONTROL: return ImGuiKey_LeftCtrl;
+        case GLFW_KEY_LEFT_ALT: return ImGuiKey_LeftAlt;
+        case GLFW_KEY_LEFT_SUPER: return ImGuiKey_LeftSuper;
+        case GLFW_KEY_RIGHT_SHIFT: return ImGuiKey_LeftShift;
+        case GLFW_KEY_RIGHT_CONTROL: return ImGuiKey_RightCtrl;
+        case GLFW_KEY_RIGHT_ALT: return ImGuiKey_RightAlt;
+        case GLFW_KEY_RIGHT_SUPER: return ImGuiKey_RightSuper;
+        case GLFW_KEY_MENU: return ImGuiKey_Menu;
+        default: return std::nullopt;
     }
-
-    auto key = lookup[glfw_key];
-    if (key == ImGuiKey_None) {
-        return std::nullopt;
-    }
-
-    return key;
-}
+}  // namespace bpt::imgui::detail
 
 constexpr auto glfw_to_imgui_mouse_button(int glfw_button) -> std::optional<ImGuiMouseButton> {
     switch (glfw_button) {
